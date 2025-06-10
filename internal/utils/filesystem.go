@@ -17,7 +17,6 @@ func ValidatePath(path string) error {
 		return fmt.Errorf("invalid path: %w", err)
 	}
 
-	// Check for directory traversal attempts
 	if strings.Contains(absPath, "..") {
 		return fmt.Errorf("directory traversal not allowed")
 	}

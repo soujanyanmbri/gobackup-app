@@ -14,6 +14,10 @@ import (
 
 /*
 This is the main backup engine now.
+1. Initialize() - Set up directories and load metadata
+2. Start() - Begin background processing
+3. ProcessChanges() - Send file changes as they're detected
+4. Shutdown() - Clean stop when done
 */
 type Engine struct {
 	watchPath    string
@@ -165,5 +169,7 @@ func (e *Engine) PerformFullBackup() error {
 
 func (e *Engine) Shutdown() {
 	close(e.shutdownChan)
+	// gracefully shutdown now
+
 	e.wg.Wait()
 }
