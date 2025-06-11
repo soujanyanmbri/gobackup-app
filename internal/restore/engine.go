@@ -30,6 +30,14 @@ func NewEngine(backupPath, targetPath string) (*Engine, error) {
 	}, nil
 }
 
+func (e *Engine) InitializeWithoutTarget() error {
+	if err := e.metadata.LoadMetadata(); err != nil {
+		return fmt.Errorf("failed to load backup metadata: %w", err)
+	}
+
+	return nil
+}
+
 func (e *Engine) Initialize() error {
 	if err := e.metadata.LoadMetadata(); err != nil {
 		return fmt.Errorf("failed to load backup metadata: %w", err)
@@ -44,7 +52,6 @@ func (e *Engine) Initialize() error {
 
 func (e *Engine) ValidateBackup() error {
 	meta := e.metadata.GetMetadata()
-
 	for _, chunk := range meta.Chunks {
 		chunkPath := filepath.Join(e.backupPath, chunk.Filename)
 		if _, err := os.Stat(chunkPath); os.IsNotExist(err) {
@@ -59,11 +66,15 @@ func (e *Engine) RestoreAll() error {
 	if err := e.ValidateBackup(); err != nil {
 		return err
 	}
-
 	meta := e.metadata.GetMetadata()
+	// fmt.Println("Version:", meta.Version)
+	// fmt.Println("Created At:", meta.CreatedAt)
+	// fmt.Println("Updated At:", meta.UpdatedAt)
+	// fmt.Println("FIles, ", meta.Files)
 
 	chunkMap := make(map[int]models.ChunkInfo)
 	for _, chunk := range meta.Chunks {
+		// fmt.Println("THis is the chunk : ", chunk.Filename)
 		chunkMap[chunk.ID] = chunk
 	}
 

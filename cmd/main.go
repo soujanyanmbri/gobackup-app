@@ -224,6 +224,10 @@ func runRestore() error {
 	}
 
 	engine, err := restore.NewEngine(backupPath, targetPath)
+	if err := engine.Initialize(); err != nil {
+		return fmt.Errorf("failed to initialize restore engine: %w", err)
+	}
+	engine.ListFiles()
 	if err != nil {
 		return fmt.Errorf("failed to initialize restore engine: %w", err)
 	}
@@ -242,6 +246,9 @@ func listBackupFiles() error {
 	}
 
 	engine, err := restore.NewEngine(backupPath, "")
+	if err := engine.InitializeWithoutTarget(); err != nil {
+		return fmt.Errorf("failed to initialize restore engine: %w", err)
+	}
 	if err != nil {
 		return fmt.Errorf("failed to initialize engine: %w", err)
 	}
@@ -255,6 +262,9 @@ func verifyBackup() error {
 	}
 
 	engine, err := restore.NewEngine(backupPath, "")
+	if err := engine.InitializeWithoutTarget(); err != nil {
+		return fmt.Errorf("failed to initialize restore engine: %w", err)
+	}
 	if err != nil {
 		return fmt.Errorf("failed to initialize engine: %w", err)
 	}

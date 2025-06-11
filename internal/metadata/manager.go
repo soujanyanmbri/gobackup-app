@@ -33,7 +33,6 @@ func (m *Manager) LoadMetadata() error {
 	defer m.mu.Unlock()
 
 	metadataPath := filepath.Join(m.backupPath, "metadata.json")
-
 	data, err := os.ReadFile(metadataPath)
 	if os.IsNotExist(err) {
 		return nil
@@ -62,7 +61,6 @@ func (m *Manager) SaveMetadata() error {
 	metadataPath := filepath.Join(m.backupPath, "metadata.json")
 	tempPath := metadataPath + ".tmp"
 
-	// Write to temp file first
 	if err := os.WriteFile(tempPath, data, 0644); err != nil {
 		return err
 	}
