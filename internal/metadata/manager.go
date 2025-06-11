@@ -94,7 +94,6 @@ func (m *Manager) GetMetadata() *models.BackupMetadata {
 func (m *Manager) DetectChanges(watchPath string) ([]models.FileChange, error) {
 	var changes []models.FileChange
 
-	// Walk the directory to find all current files
 	currentFiles := make(map[string]models.FileInfo)
 
 	err := filepath.Walk(watchPath, func(path string, info os.FileInfo, err error) error {
@@ -135,6 +134,7 @@ func (m *Manager) DetectChanges(watchPath string) ([]models.FileChange, error) {
 
 	// Check for new or modified files
 	for path, currentInfo := range currentFiles {
+		// fmt.Print("these are current files - ", currentInfo)
 		if storedInfo, exists := m.metadata.Files[path]; exists {
 			if !storedInfo.IsDeleted && (storedInfo.Hash != currentInfo.Hash || storedInfo.ModTime != currentInfo.ModTime) {
 				changes = append(changes, models.FileChange{
